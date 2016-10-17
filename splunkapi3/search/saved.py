@@ -79,8 +79,8 @@ class Saved(Rest):
         :return: Collection of saved search jobs.
         """
         relative_url = 'saved/searches/{name}/history/'.format(name=name)
-        content = self.connection.get_record(relative_url=relative_url).feed.entry
-        return content if content else []
+        content = self.connection.get_record(relative_url=relative_url)
+        return content.feed.entry or []
 
     def reschedule(self, name: str, schedule_time: str=None):
         """

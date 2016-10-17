@@ -23,7 +23,7 @@ if __name__ == '__main__':
     cc = client.access_control.current_context()
 
     r = client.search.command.get_data_commands(options=Options(count=50))
-    r1 = client.search.saved.history(name='Apache Error 2')
+    r1 = client.search.view.get_view()
 
     pprint(r1)
 
