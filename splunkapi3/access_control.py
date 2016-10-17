@@ -28,9 +28,8 @@ class AccessControl(object):
         :return: Context ordered dictionary
         """
         relative_url = 'authentication/current-context/'
-        content = self.connection.get(relative_url)
-        parsed = parse(content)
-        return parsed['feed']
+        content = self.connection.get_record(relative_url)
+        return content.feed.entry.content
 
     # noinspection SpellCheckingInspection,PyMethodMayBeStatic
     def get_httpauth_tokens(self):

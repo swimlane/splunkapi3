@@ -2,7 +2,7 @@ from requests import Request, Response, get, post, put, delete
 from urllib.parse import urlunparse, urlparse, urljoin
 from splunkapi3.status_codes import code_description
 from splunkapi3.options import Options
-from splunkapi3.data import Record
+from splunkapi3.data import load, Record
 
 
 class Connection(object):
@@ -65,7 +65,7 @@ class Connection(object):
         :param options: Paging and filtering parameters.
         :return: Record object.
         """
-        return Record(self.get(relative_url=relative_url, params=params, options=options))
+        return load(self.get(relative_url=relative_url, params=params, options=options))
 
     @staticmethod
     def validate_response(response):
