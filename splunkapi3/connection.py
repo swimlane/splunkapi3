@@ -2,6 +2,7 @@ from requests import Request, Response, get, post, put, delete
 from urllib.parse import urlunparse, urlparse, urljoin
 from splunkapi3.status_codes import code_description
 from splunkapi3.options import Options
+from splunkapi3.data import Record
 
 
 class Connection(object):
@@ -44,7 +45,7 @@ class Connection(object):
         :param options: Generic pagination and filtering parameters.
         :return: Merged dictionary.
         """
-        parameters = options.__dict__.copy() if options else {}
+        parameters = options.dict if options else {}
         if params:
             parameters.update(params)
         return parameters
@@ -55,6 +56,16 @@ class Connection(object):
         response = get(url=_full_url, params=parameters, headers=self.headers, verify=self.verify)
         self.validate_response(response)
         return response.content
+
+    def get_record(self, relative_url: str, params: dict=None, options: Options=None)->Record:
+        """
+        Return results of get request parsed and wrapped in Record.
+        :param relative_url: Relative url of REST call
+        :param params: Parameters for the call
+        :param options: Paging and filtering parameters.
+        :return: Record object.
+        """
+        return Record(self.get(relative_url=relative_url, params=params, options=options))
 
     @staticmethod
     def validate_response(response):
@@ -71,8 +82,7 @@ class Connection(object):
         self.validate_response(response)
         return response.content
 
-    def delete(self, relative_url: str, params: dict=None):
+    def delete(self, relative_url: str):
         full_url = urljoin(self.url, relative_url)
-        response = post(url=full_url, headers=self.headers,
-                        params=params, verify=self.verify)
+        response = delete(url=full_url, headers=self.headers, verify=self.verify)
         self.validate_response(response)

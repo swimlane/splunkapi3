@@ -14,13 +14,21 @@ class SortMode(Enum):
 
 
 class Options(object):
-    def __init__(self, count: int = 30, offset: int = 0, sort_dir: Direction = Direction.asc,
-                 sort_key: str = 'name', sort_mode: SortMode = SortMode.auto, search: str = None,
-                 summarize: bool = False):
+    def __init__(self, count: int = None,
+                 offset: int = None,
+                 sort_dir: Direction = None,
+                 sort_key: str = None,
+                 sort_mode: SortMode = None,
+                 search: str = None,
+                 summarize: bool = None):
         self.count = count
         self.offset = offset
-        self.sort_dir = sort_dir.name
+        self.sort_dir = sort_dir.name if sort_dir else None
         self.sort_key = sort_key
-        self.sort_mode = sort_mode.name
+        self.sort_mode = sort_mode.name if sort_mode else None
         self.search = search
         self.summarize = summarize
+
+    @property
+    def dict(self):
+        return {k: v for k, v in self.__dict__.items() if v is not None}

@@ -117,7 +117,9 @@ def load_elem(element, name_table=None):
     name = localname(element.tag)
     attributes = load_attributes(element)
     value = load_value(element, name_table)
-    if attributes is None or value is None:
+    if attributes is None:
+        return name, value
+    if value is None:
         return name, attributes
     # If value is simple, merge into attributes dict using special key
     if isinstance(value, str):
