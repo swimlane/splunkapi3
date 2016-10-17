@@ -1,0 +1,11 @@
+code_description = {200: 'Request completed successfully.',
+                    201: 'Create request completed successfully.',
+                    204: 'Request completed successfully but no content available to return.',
+                    400: 'Request error. See response body for details.',
+                    401: 'Authentication failure, invalid access credentials.',
+                    402: 'In-use Splunk license disables this feature.',
+                    403: 'Insufficient permission.',
+                    404: 'Requested endpoint does not exist.',
+                    409: 'Invalid operation for this endpoint. See response body for details.',
+                    500: 'Unspecified internal server error. See response body for details.',
+                    503: 'Feature is disabled in Splunk configuration file.'}
