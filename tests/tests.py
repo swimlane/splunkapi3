@@ -21,8 +21,10 @@ if __name__ == '__main__':
     client = Client(environ.get('SPLUNK_URL'), False)
     client.connect(environ.get('SPLUNK_USER'), environ.get('SPLUNK_PASSWORD'))
     cc = client.access_control.current_context()
-    pprint(cc)
-    fa = client.search.alert.get_fired_alerts(options=Options(count=50))
-    pprint(fa)
+
+    r = client.search.command.get_data_commands(options=Options(count=50))
+    r1 = client.search.saved.history(name='Apache Error 2')
+
+    pprint(r1)
 
     nose.main()

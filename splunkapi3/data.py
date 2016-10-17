@@ -221,7 +221,7 @@ class Record(dict):
 
     def __getattr__(self, name):
         try:
-            return self[name]
+            return self.get(name)
         except KeyError:
             raise AttributeError(name)
 
@@ -259,6 +259,10 @@ class Record(dict):
         if len(result) == 0:
             raise KeyError("No key or prefix: %s" % key)
         return result
+
+    def append(self, key, value)->dict:
+        self[key] = value
+        return self
 
 
 def record(value: dict=None)->Record:

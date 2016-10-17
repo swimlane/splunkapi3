@@ -69,9 +69,10 @@ class Connection(object):
 
     @staticmethod
     def validate_response(response):
-        if response.status_code != 200:
-            message = code_description.get(response.status_code)
-            if response.status_code in [400, 409, 500]:
+        code = response.status_code
+        if code != 200 and code != 201:
+            message = code_description.get(code)
+            if code in [400, 409, 500]:
                 message += response.text
             raise ConnectionError(message)
 
