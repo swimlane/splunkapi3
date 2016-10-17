@@ -1,6 +1,5 @@
 from splunkapi3.connection import Connection
 from splunkapi3.options import Options
-from xmltodict import parse
 from splunkapi3.data import load
 
 
