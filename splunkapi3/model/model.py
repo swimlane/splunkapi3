@@ -1,4 +1,5 @@
 class Model(object):
+
     name_map = {}
 
     def map(self, key: str) -> str:
@@ -6,6 +7,4 @@ class Model(object):
 
     @property
     def dict(self) -> dict:
-        return {map(k): v for k, v in self.__dict__.items() if v is not None}
-
-
+        return {self.map(k): v for k, v in self.__dict__.items() if v is not None}

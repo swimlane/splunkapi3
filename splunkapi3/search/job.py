@@ -1,6 +1,7 @@
 from typing import List
 from urllib.parse import urlencode, quote
 from splunkapi3.model import SearchCreate, ControlAction, Options, OutputMode
+from splunkapi3.model import SearchResultOptions
 from splunkapi3.rest import Rest
 
 
@@ -82,27 +83,101 @@ class Job(Rest):
         content = self.connection.get_record(relative_url=relative_url)
         return content
 
-    def results(self, search_id: str):
+    def results(self, search_id: str)->dict:
         """
-        Access {search_id} search events. These events are the data from the search
-        pipeline before the first "transforming" search command.
+        This is the table that exists after all processing from the search pipeline has completed.
+        This is the primary method for a client to fetch a set of TRANSFORMED events.
+        If the dispatched search does not include a transforming command, the effect is the
+        same as get_events, however with fewer options.
 
         :param search_id: Search Id. <sid> returned from get_jobs.
-        :return: None
+        :return: Results of a search.
         """
         relative_url = 'search/jobs/{search_id}/results/'.format(search_id=quote(search_id))
         content = self.connection.get_record(relative_url=relative_url)
         return content
 
-    def results_formatted(self, search_id: str, output_mode: OutputMode=OutputMode.xml):
+    def results_formatted(self, search_id: str, output_mode: OutputMode=OutputMode.xml,
+                          options: SearchResultOptions=None)->str:
         """
-        Access {search_id} search events. These events are the data from the search
-        pipeline before the first "transforming" search command.
+        This is the table that exists after all processing from the search pipeline has completed.
+        This is the primary method for a client to fetch a set of TRANSFORMED events.
+        If the dispatched search does not include a transforming command, the effect is the
+        same as get_events, however with fewer options.
 
+        :param options: Other search result options.
         :param output_mode: Specifies the format for the returned output.
         :param search_id: Search Id. <sid> returned from get_jobs.
-        :return: None
+        :return: Results of a search.
         """
         relative_url = 'search/jobs/{search_id}/results/'.format(search_id=quote(search_id))
-        params = {'output_mode': output_mode.name}
+        params = [('output_mode', output_mode.name)]
+        if options:
+            params.extend(options.dict)
         return self.connection.get(relative_url=relative_url, params=params)
+
+    def results_immediate(self, search_id: str)->dict:
+        """
+        Returns the intermediate preview results of the search specified by {search_id}.
+        When the job is complete, this gives the same response as `results` method.
+        Preview is enabled for real-time searches and for searches where status_buckets > 0.
+
+        :param search_id: Search Id. <sid> returned from get_jobs.
+        :return: Results of a search.
+        """
+        relative_url = 'search/jobs/{search_id}/results_preview/'\
+            .format(search_id=quote(search_id))
+        content = self.connection.get_record(relative_url=relative_url)
+        return content
+
+    def results_immediate_formatted(self, search_id: str,
+                                    output_mode: OutputMode=OutputMode.xml,
+                                    options: SearchResultOptions=None)->str:
+        """
+        Returns the intermediate preview results of the search specified by {search_id}.
+        When the job is complete, this gives the same response as `results` method.
+        Preview is enabled for real-time searches and for searches where status_buckets > 0.
+
+        :param options: Other search result options.
+        :param output_mode: Specifies the format for the returned output.
+        :param search_id: Search Id. <sid> returned from get_jobs.
+        :return: Results of a search.
+        """
+        relative_url = 'search/jobs/{search_id}/results_preview/'.format(search_id=quote(search_id))
+        params = [('output_mode', output_mode.name)]
+        if options:
+            params.extend(options.dict)
+        return self.connection.get(relative_url=relative_url, params=params)
+
+    def log(self, search_id: str)->str:
+        """
+        Get the {search_id} search log.
+
+        :param search_id: Search Id. <sid> returned from get_jobs.
+        :return: Log as text.
+        """
+        relative_url = 'search/jobs/{search_id}/search.log/'.format(search_id=quote(search_id))
+        return self.connection.get(relative_url=relative_url)
+
+    def summary(self, search_id: str)->dict:
+        """
+        Get the getFieldsAndStats output of the events to-date, for the search_id search.
+
+        :param search_id: Search Id. <sid> returned from get_jobs.
+        :return: Summary.
+        """
+        relative_url = 'search/jobs/{search_id}/summary/'.format(search_id=quote(search_id))
+        return self.connection.get_record(relative_url=relative_url)
+
+    def time_line(self, search_id: str, time_format: str=None)->dict:
+        """
+        Get the getFieldsAndStats output of the events to-date, for the search_id search.
+
+        :param time_format: Expression to convert a formatted time string from
+        {start,end}_time into UTC seconds. Default %m/%d/%Y:%H:%M:%S
+        :param search_id: Search Id. <sid> returned from get_jobs.
+        :return: Time line.
+        """
+        relative_url = 'search/jobs/{search_id}/summary/'.format(search_id=quote(search_id))
+        params = {'time_format': time_format} if time_format else {}
+        return self.connection.get_record(relative_url=relative_url, params=params)

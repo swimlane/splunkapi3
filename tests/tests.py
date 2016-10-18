@@ -26,7 +26,9 @@ if __name__ == '__main__':
 
     r = client.search.job.get_jobs(options=Options(count=50))
     pprint(r)
-    r1 = client.search.job.results('scheduler__nobody_c3BsdW5rX2FyY2hpdmVy__RMD5473cbac83d6c9db7_at_1476796620_5736')
+    # r1 = client.search.job.results('scheduler__nobody_c3BsdW5rX2FyY2hpdmVy__RMD5473cbac83d6c9db7_at_1476796620_5736')
+    r1 = client.search.util.time_parser(['-5h', '-6'])
+    # r1 = client.search.util.type_ahead(prefix='source', count=3)
 
     pprint(r1)
 

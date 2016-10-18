@@ -1,10 +1,10 @@
+from typing import Union, List, Tuple
 from urllib.parse import urlunparse, urlparse, urljoin
-
 from requests import get, post, delete
-
 from splunkapi3.data import load, Record
 from splunkapi3.model.options import Options
 from splunkapi3.status_codes import code_description
+
 
 class Connection(object):
 
@@ -39,26 +39,28 @@ class Connection(object):
                            '/services/', None, None, False])
 
     @staticmethod
-    def get_parameters(params: dict, options: Options)->dict:
+    def get_parameters(params: Union[dict, List[Tuple]], options: Options)->List[Tuple]:
         """
         Translates options into parameters and merges with parameters.
         :param params: Parameters specific to method.
         :param options: Generic pagination and filtering parameters.
         :return: Merged dictionary.
         """
-        parameters = options.dict if options else {}
+        parameters = list(options.dict.items()) if options else []
         if params:
-            parameters.update(params)
+            parameters.extend(params.items() if isinstance(params, dict) else params)
         return parameters
 
-    def get(self, relative_url: str, params: dict=None, options: Options=None)->str:
+    def get(self, relative_url: str,
+            params: Union[dict, List[Tuple]]=None, options: Options=None)->str:
         _full_url = urljoin(self.url, relative_url)
         parameters = self.get_parameters(params, options)
         response = get(url=_full_url, params=parameters, headers=self.headers, verify=self.verify)
         self.validate_response(response)
         return response.content
 
-    def get_record(self, relative_url: str, params: dict=None, options: Options=None)->Record:
+    def get_record(self, relative_url: str,
+                   params: Union[dict, List[Tuple]]=None, options: Options=None)->Record:
         """
         Return results of get request parsed and wrapped in Record.
         :param relative_url: Relative url of REST call
