@@ -1,7 +1,7 @@
 from typing import List
-from splunkapi3.options import Options
-from splunkapi3.rest import Rest
 
+from splunkapi3.model.options import Options
+from splunkapi3.rest import Rest
 
 class Command(Rest):
 

@@ -3,6 +3,7 @@ from splunkapi3.search.alert import Alert
 from splunkapi3.search.command import Command
 from splunkapi3.search.saved import Saved
 from splunkapi3.search.view import View
+from splunkapi3.search.job import Job
 
 
 class Search(Rest):
@@ -11,6 +12,7 @@ class Search(Rest):
     _command = None
     _saved = None
     _view = None
+    _job = None
 
     @property
     def alert(self):
@@ -35,3 +37,9 @@ class Search(Rest):
         if not self._view:
             self._view = View(self.connection)
         return self._view
+
+    @property
+    def job(self):
+        if not self._job:
+            self._job = Job(self.connection)
+        return self._job

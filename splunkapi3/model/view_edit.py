@@ -1,4 +1,7 @@
-class ViewEditModel(object):
+from splunkapi3.model.model import Model
+
+
+class ViewEdit(Model):
     name_map = {'action_email_to': 'action.email.to',
                 'action_email': 'action.email*'}
 
@@ -27,10 +30,3 @@ class ViewEditModel(object):
         self.description = description
         self.disabled = disabled
         self.next_scheduled_time = next_scheduled_time
-
-    def map(self, key: str)->str:
-        return self.name_map.get(key) or key
-
-    @property
-    def dict(self)->dict:
-        return {map(k): v for k, v in self.__dict__.items() if v is not None}

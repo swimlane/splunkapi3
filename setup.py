@@ -3,7 +3,10 @@ from setuptools import setup
 setup(
     name='splunkapi3',
     version='0.0.1',
-    packages=['splunkapi3', 'splunkapi3/search'],
+    packages=['splunkapi3',
+              'splunkapi3/search',
+              'splunkapi3/model'
+              ],
     url='https://github.com/swimlane/splunkapi3',
     license='MIT',
     author='Dmitriy Krasnikov',

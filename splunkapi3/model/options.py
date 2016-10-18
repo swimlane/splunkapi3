@@ -14,6 +14,7 @@ class SortMode(Enum):
 
 
 class Options(object):
+
     def __init__(self, count: int = None,
                  offset: int = None,
                  sort_dir: Direction = None,

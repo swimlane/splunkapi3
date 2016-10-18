@@ -1,9 +1,10 @@
-from requests import Request, Response, get, post, put, delete
 from urllib.parse import urlunparse, urlparse, urljoin
-from splunkapi3.status_codes import code_description
-from splunkapi3.options import Options
-from splunkapi3.data import load, Record
 
+from requests import get, post, delete
+
+from splunkapi3.data import load, Record
+from splunkapi3.model.options import Options
+from splunkapi3.status_codes import code_description
 
 class Connection(object):
 

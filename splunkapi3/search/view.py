@@ -1,8 +1,8 @@
 from typing import List
-from splunkapi3.options import Options
-from splunkapi3.rest import Rest
-from splunkapi3.search.model import ViewEditModel
 
+from splunkapi3.model import ViewEdit
+from splunkapi3.model.options import Options
+from splunkapi3.rest import Rest
 
 class View(Rest):
 
@@ -32,7 +32,7 @@ class View(Rest):
         content = self.connection.get_record(relative_url=relative_url)
         return content.feed.entry
 
-    def edit(self, name: str, view_edit_model: ViewEditModel=None)->dict:
+    def edit(self, name: str, view_edit_model: ViewEdit=None)->dict:
         """
         Edit a scheduled view, e.g. change schedule, enable disable schedule etc.
         :return: None

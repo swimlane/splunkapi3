@@ -1,7 +1,4 @@
 from splunkapi3.connection import Connection
-from splunkapi3.options import Options
-from splunkapi3.data import load
-
 
 class Rest(object):
 
