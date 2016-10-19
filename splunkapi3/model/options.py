@@ -1,4 +1,5 @@
 from enum import Enum
+from splunkapi3.model.model import Model
 
 
 class Direction(Enum):
@@ -13,9 +14,10 @@ class SortMode(Enum):
     num = 4
 
 
-class Options(object):
+class Options(Model):
 
-    def __init__(self, count: int = None,
+    def __init__(self,
+                 count: int = None,
                  offset: int = None,
                  sort_dir: Direction = None,
                  sort_key: str = None,
@@ -29,7 +31,3 @@ class Options(object):
         self.sort_mode = sort_mode.name if sort_mode else None
         self.search = search
         self.summarize = summarize
-
-    @property
-    def dict(self):
-        return {k: v for k, v in self.__dict__.items() if v is not None}

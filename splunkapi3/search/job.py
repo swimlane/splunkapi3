@@ -3,6 +3,7 @@ from urllib.parse import urlencode, quote
 from splunkapi3.model import SearchCreate, ControlAction, Options, OutputMode
 from splunkapi3.model import SearchResultOptions
 from splunkapi3.rest import Rest
+from json import loads, load
 
 
 class Job(Rest):
@@ -181,3 +182,64 @@ class Job(Rest):
         relative_url = 'search/jobs/{search_id}/summary/'.format(search_id=quote(search_id))
         params = {'time_format': time_format} if time_format else {}
         return self.connection.get_record(relative_url=relative_url, params=params)
+
+    def export(self,
+               query: str,
+               options: SearchCreate=None,
+               output_mode: OutputMode=OutputMode.xml)-> bytes:
+        """
+        Stream search results as they become available.
+        Performs a search identical to POST search/jobs, except the search does not create a
+        search ID (<sid>) and the search streams results as they become available.
+        Streaming of results is based on the search string.
+
+        For non-streaming searches, previews of the final results are available if preview
+        is enabled. If preview is not enabled, it is better to use
+        search/jobs with exec_mode=oneshot.
+
+        If it is too big, you might instead run with the search/jobs (not search/jobs/export)
+        endpoint (it takes POST with the same parameters), maybe using the
+        exec_mode=blocking. You'll then get back a search id, and then you can page
+        through the results and request them from the server under your control, which is a
+        better approach for extremely large result sets that need to be chunked.
+        :param query: The search query to run
+        :param options: Optional parameters.
+        :param output_mode: Specifies the format for the returned output.
+        :return: Results of search.
+        """
+        relative_url = 'search/jobs/export/'
+        params = options.dict if options else {}
+        params.update({'search': query, 'output_mode': output_mode.name})
+        return self.connection.get(relative_url=relative_url, params=params)
+
+    def export_oneshot(self, query: str, options: SearchCreate=SearchCreate())->List[dict]:
+        """
+        Stream search results as they become available.
+        Performs a search identical to POST search/jobs, except the search does not create a
+        search ID (<sid>) and the search streams results as they become available.
+        Streaming of results is based on the search string.
+
+        For non-streaming searches, previews of the final results are available if preview
+        is enabled. If preview is not enabled, it is better to use
+        search/jobs with exec_mode=oneshot.
+
+        If it is too big, you might instead run with the search/jobs (not search/jobs/export)
+        endpoint (it takes POST with the same parameters), maybe using the
+        exec_mode=blocking. You'll then get back a search id, and then you can page
+        through the results and request them from the server under your control, which is a
+        better approach for extremely large result sets that need to be chunked.
+        :return: Results of search.
+        """
+        # options = options or SearchCreate()
+        options.exec_mode = 'oneshot'
+        content = self.export(query, options=options, output_mode=OutputMode.json)
+        content = str(content, 'utf-8')
+        result = []
+        for row in content.split('\n'):
+            record = loads(row)
+            if record.get('lastrow'):
+                break
+            result.append(record['result'])
+        return result
+
+

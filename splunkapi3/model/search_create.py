@@ -2,10 +2,12 @@ from splunkapi3.model.model import Model
 
 
 class SearchCreate(Model):
-    name_map = {'id_': 'id',
-                'indexed_realtime': 'indexedRealtime',
-                'indexed_realtime_offset': 'indexedRealtimeOffset'
-                }
+
+    name_map = {
+        'id_': 'id',
+        'indexed_realtime': 'indexedRealtime',
+        'indexed_realtime_offset': 'indexedRealtimeOffset'
+    }
 
     def __init__(self, auto_cancel: int = None, auto_finalize_ec: int = None,
                  auto_pause: int = None, custom: str = None, earliest_time: str = None,

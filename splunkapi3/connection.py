@@ -59,8 +59,10 @@ class Connection(object):
         self.validate_response(response)
         return response.content
 
-    def get_record(self, relative_url: str,
-                   params: Union[dict, List[Tuple]]=None, options: Options=None)->Record:
+    def get_record(self,
+                   relative_url: str,
+                   params: Union[dict, List[Tuple]]=None,
+                   options: Options=None)->Record:
         """
         Return results of get request parsed and wrapped in Record.
         :param relative_url: Relative url of REST call

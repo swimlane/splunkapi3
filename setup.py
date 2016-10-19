@@ -1,8 +1,13 @@
 from setuptools import setup
+import sys
+from os.path import normpath, dirname
+
+sys.path.insert(0, normpath(dirname(__file__)))
+from splunkapi3 import __version__ as _version
 
 setup(
     name='splunkapi3',
-    version='0.0.1',
+    version=_version,
     packages=['splunkapi3',
               'splunkapi3/search',
               'splunkapi3/model'
